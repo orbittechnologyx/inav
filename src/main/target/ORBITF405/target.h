@@ -40,7 +40,7 @@
 
 // *************** UART *****************************
 #define USE_VCP
-#define USB_DETECT_PIN          PC14
+//#define USB_DETECT_PIN          PC14
 #define USE_UART_INVERTER
 
 #define USE_UART1
@@ -128,9 +128,9 @@
 
 #define USE_SDCARD_SPI
 #define SDCARD_SPI_BUS          BUS_SPI3
-#define SDCARD_CS_PIN           PB7
-#define SDCARD_DETECT_PIN       PC14
-#define SDCARD_DETECT_INVERTED
+#define SDCARD_CS_PIN           PC14
+//#define SDCARD_DETECT_PIN       PC14
+//#define SDCARD_DETECT_INVERTED
 
 #define USE_FLASH_M25P16
 #define M25P16_SPI_BUS          BUS_SPI3
