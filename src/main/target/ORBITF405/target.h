@@ -134,7 +134,7 @@
 
 #define USE_FLASH_M25P16
 #define M25P16_SPI_BUS          BUS_SPI3
-#define M25P16_CS_PIN           PB6
+#define M25P16_CS_PIN           PB15
 
 #define ENABLE_BLACKBOX_LOGGING_ON_SPIFLASH_BY_DEFAULT
 
