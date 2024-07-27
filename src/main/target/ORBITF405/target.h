@@ -89,7 +89,7 @@
 #define SPI1_MOSI_PIN           PA7
 
 #define USE_IMU_ICM42688
-#define IMU_ICM42688_ALIGN      CW90_DEG
+#define IMU_ICM42688_ALIGN      CW270_DEG
 #define ICM42688_CS_PIN         PA4
 #define ICM42688_SPI_BUS        BUS_SPI1
 
@@ -161,12 +161,15 @@
 #define CURRENT_METER_ADC_CHANNEL   ADC_CHN_2
 #define RSSI_ADC_CHANNEL            ADC_CHN_3
 
+#define VBAT_SCALE_DEFAULT      1010
+#define CURRENT_METER_SCALE     400
+
 // *************** LED *****************************
 #define USE_LED_STRIP
 #define WS2811_PIN PA8
 
 #define DEFAULT_FEATURES                (FEATURE_TX_PROF_SEL  | FEATURE_OSD | FEATURE_CURRENT_METER | FEATURE_VBAT  | FEATURE_BLACKBOX | FEATURE_TELEMETRY)
-#define CURRENT_METER_SCALE     400
+
 
 #define USE_DSHOT
 #define USE_SERIALSHOT
