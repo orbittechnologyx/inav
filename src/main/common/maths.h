@@ -73,6 +73,10 @@
 #define CMSEC_TO_CENTIKPH(cms)          (cms * 3.6f)
 #define CMSEC_TO_CENTIKNOTS(cms)        (cms * 1.943845f)
 
+#define CMSEC_TO_MPH(cms)          (CMSEC_TO_CENTIMPH(cms) / 100.0f)
+#define CMSEC_TO_KPH(cms)          (CMSEC_TO_CENTIKPH(cms) / 100.0f)
+#define CMSEC_TO_KNOTS(cms)        (CMSEC_TO_CENTIKNOTS(cms) / 100.0f)
+
 #define C_TO_KELVIN(temp) (temp + 273.15f)
 
 // Standard Sea Level values
@@ -166,6 +170,7 @@ int scaleRange(int x, int srcMin, int srcMax, int destMin, int destMax);
 float scaleRangef(float x, float srcMin, float srcMax, float destMin, float destMax);
 
 int32_t wrap_18000(int32_t angle);
+int16_t wrap_180(int16_t angle);
 int32_t wrap_36000(int32_t angle);
 
 int32_t quickMedianFilter3(int32_t * v);

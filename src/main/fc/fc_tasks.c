@@ -34,6 +34,8 @@
 #include "drivers/serial.h"
 #include "drivers/stack_check.h"
 #include "drivers/pwm_mapping.h"
+#include "drivers/gimbal_common.h"
+#include "drivers/headtracker_common.h"
 
 #include "fc/cli.h"
 #include "fc/config.h"
@@ -91,6 +93,7 @@
 #include "sensors/opflow.h"
 
 #include "telemetry/telemetry.h"
+#include "telemetry/sbus2.h"
 
 #include "config/feature.h"
 
@@ -427,6 +430,18 @@ void fcTasksInit(void)
     setTaskEnabled(TASK_SMARTPORT_MASTER, true);
 #endif
 
+#ifdef USE_SERIAL_GIMBAL
+    setTaskEnabled(TASK_GIMBAL, true);
+#endif
+
+#ifdef USE_HEADTRACKER
+    setTaskEnabled(TASK_HEADTRACKER, true);
+#endif
+
+#if defined(USE_TELEMETRY) && defined(USE_TELEMETRY_SBUS2)
+    setTaskEnabled(TASK_TELEMETRY_SBUS2,rxConfig()->receiverType == RX_TYPE_SERIAL && rxConfig()->serialrx_provider == SERIALRX_SBUS2);
+#endif
+
 #ifdef USE_ADAPTIVE_FILTER
     setTaskEnabled(TASK_ADAPTIVE_FILTER, (
         gyroConfig()->gyroFilterMode == GYRO_FILTER_MODE_ADAPTIVE && 
@@ -697,4 +712,32 @@ cfTask_t cfTasks[TASK_COUNT] = {
         .staticPriority = TASK_PRIORITY_LOW,
     },
 #endif
+
+#ifdef USE_SERIAL_GIMBAL
+    [TASK_GIMBAL] = {
+        .taskName = "GIMBAL",
+        .taskFunc = taskUpdateGimbal,
+        .desiredPeriod = TASK_PERIOD_HZ(50),
+        .staticPriority = TASK_PRIORITY_MEDIUM,
+    },
+#endif
+
+#ifdef USE_HEADTRACKER
+    [TASK_HEADTRACKER] = {
+        .taskName = "HEADTRACKER",
+        .taskFunc = taskUpdateHeadTracker,
+        .desiredPeriod = TASK_PERIOD_HZ(50),
+        .staticPriority = TASK_PRIORITY_MEDIUM,
+    },
+#endif
+
+#if defined(USE_TELEMETRY) && defined(USE_TELEMETRY_SBUS2)
+    [TASK_TELEMETRY_SBUS2] = {
+        .taskName = "SBUS2 TLM",
+        .taskFunc = taskSendSbus2Telemetry,
+        .desiredPeriod = TASK_PERIOD_US(125), // 8kHz 2ms dead time + 650us window / sensor.
+        .staticPriority = TASK_PRIORITY_LOW, // timing is critical. Ideally, should be a timer interrupt triggered by sbus packet
+    },
+#endif
+
 };
