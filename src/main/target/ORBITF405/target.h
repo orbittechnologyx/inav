@@ -88,7 +88,7 @@
 #define SPI1_MISO_PIN           PA6
 #define SPI1_MOSI_PIN           PA7
 
-#define USE_IMU_ICM42688
+#define USE_IMU_ICM42605        //Using ICM42688
 #define IMU_ICM42688_ALIGN      CW270_DEG
 #define ICM42688_CS_PIN         PA4
 #define ICM42688_SPI_BUS        BUS_SPI1
