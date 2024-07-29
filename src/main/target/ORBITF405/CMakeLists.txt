@@ -1,1 +1,2 @@
 target_stm32f405xg(ORBITF405)
+target_stm32f405xg(ORBITF405_SD)

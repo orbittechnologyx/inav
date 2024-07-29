@@ -24,8 +24,13 @@
 
 #pragma once
 
-#define TARGET_BOARD_IDENTIFIER "ORB4"		
-#define USBD_PRODUCT_STRING  "OrbitF405"	
+#ifdef ORBITF405
+#define TARGET_BOARD_IDENTIFIER "ORB4"
+#define USBD_PRODUCT_STRING     "ORBITF405"
+#else
+#define TARGET_BOARD_IDENTIFIER "ORB4SD"
+#define USBD_PRODUCT_STRING     "ORBITF405_SD"
+#endif
 
 /*** Indicators ***/
 #define LED0                    PC13  //Blue  
@@ -119,24 +124,27 @@
 
 // *************** Internal SD card && FLASH **************************
 #define USE_SPI_DEVICE_3
-#define USE_SDCARD
-#define USE_FLASHFS
-
 #define SPI3_SCK_PIN            PB3
 #define SPI3_MISO_PIN           PB4
 #define SPI3_MOSI_PIN           PB5
 
+#if defined(ORBITF405_SD)
+//SDCARD Definations
+#define USE_SDCARD
 #define USE_SDCARD_SPI
 #define SDCARD_SPI_BUS          BUS_SPI3
 #define SDCARD_CS_PIN           PC14
-//#define SDCARD_DETECT_PIN       PC14
 //#define SDCARD_DETECT_INVERTED
-
+//#define SDCARD_DETECT_PIN       PC14
+#define ENABLE_BLACKBOX_LOGGING_ON_SDCARD_BY_DEFAULT
+#else
+//FLASHFS Definations
+#define USE_FLASHFS
 #define USE_FLASH_M25P16
-#define M25P16_SPI_BUS          BUS_SPI3
-#define M25P16_CS_PIN           PB15
-
+#define M25P16_SPI_BUS                  BUS_SPI3
+#define M25P16_CS_PIN                   PB15
 #define ENABLE_BLACKBOX_LOGGING_ON_SPIFLASH_BY_DEFAULT
+#endif
 
 // *************** OSD *****************************
 #define USE_SPI_DEVICE_2
