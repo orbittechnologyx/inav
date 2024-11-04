@@ -120,9 +120,6 @@ void taskHandleSerial(timeUs_t currentTimeUs)
 #ifdef USE_MSP_OSD
 	// Capture MSP Displayport messages to determine if VTX is connected
     mspOsdSerialProcess(mspFcProcessCommand);
-#ifdef USE_VTX_MSP
-    mspVtxSerialProcess(mspFcProcessCommand);
-#endif
 #endif
 
 }
@@ -409,7 +406,7 @@ void fcTasksInit(void)
     setTaskEnabled(TASK_OPFLOW, sensors(SENSOR_OPFLOW));
 #endif
 #ifdef USE_VTX_CONTROL
-#if defined(USE_VTX_SMARTAUDIO) || defined(USE_VTX_TRAMP)
+#if defined(USE_VTX_SMARTAUDIO) || defined(USE_VTX_TRAMP) || defined(USE_VTX_MSP)
     setTaskEnabled(TASK_VTXCTRL, true);
 #endif
 #endif
@@ -439,7 +436,7 @@ void fcTasksInit(void)
 #endif
 
 #if defined(USE_TELEMETRY) && defined(USE_TELEMETRY_SBUS2)
-    setTaskEnabled(TASK_TELEMETRY_SBUS2,rxConfig()->receiverType == RX_TYPE_SERIAL && rxConfig()->serialrx_provider == SERIALRX_SBUS2);
+    setTaskEnabled(TASK_TELEMETRY_SBUS2,feature(FEATURE_TELEMETRY) && rxConfig()->receiverType == RX_TYPE_SERIAL && rxConfig()->serialrx_provider == SERIALRX_SBUS2);
 #endif
 
 #ifdef USE_ADAPTIVE_FILTER
