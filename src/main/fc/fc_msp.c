@@ -34,6 +34,7 @@
 #include "common/color.h"
 #include "common/maths.h"
 #include "common/streambuf.h"
+#include "common/string_light.h"
 #include "common/bitarray.h"
 #include "common/time.h"
 #include "common/utils.h"
@@ -215,7 +216,7 @@ static void mspSerialPassthroughFn(serialPort_t *serialPort)
 
 static void mspFcSetPassthroughCommand(sbuf_t *dst, sbuf_t *src, mspPostProcessFnPtr *mspPostProcessFn)
 {
-    const unsigned int dataSize = sbufBytesRemaining(src);
+    const unsigned int dataSize = sbufBytesRemaining(src);  /* Payload size in Bytes */
 
     if (dataSize == 0) {
         // Legacy format
@@ -1771,6 +1772,54 @@ static mspResult_e mspFwApproachOutCommand(sbuf_t *dst, sbuf_t *src)
 }
 #endif
 
+#ifdef USE_GEOZONE
+static mspResult_e mspFcGeozoneOutCommand(sbuf_t *dst, sbuf_t *src)
+{
+    const uint8_t idx = sbufReadU8(src);
+    if (idx < MAX_GEOZONES_IN_CONFIG) {
+        sbufWriteU8(dst, idx);
+        sbufWriteU8(dst, geoZonesConfig(idx)->type);
+        sbufWriteU8(dst, geoZonesConfig(idx)->shape);
+        sbufWriteU32(dst, geoZonesConfig(idx)->minAltitude);
+        sbufWriteU32(dst, geoZonesConfig(idx)->maxAltitude);
+        sbufWriteU8(dst, geoZonesConfig(idx)->isSealevelRef);
+        sbufWriteU8(dst, geoZonesConfig(idx)->fenceAction);
+        sbufWriteU8(dst, geoZonesConfig(idx)->vertexCount);
+        return MSP_RESULT_ACK;
+    } else {
+        return MSP_RESULT_ERROR;
+    }
+}
+
+static mspResult_e mspFcGeozoneVerteciesOutCommand(sbuf_t *dst, sbuf_t *src)
+{
+    const uint8_t zoneId = sbufReadU8(src);
+    const uint8_t vertexId = sbufReadU8(src);
+    if (zoneId < MAX_GEOZONES_IN_CONFIG) {
+        int8_t  vertexIdx = geozoneGetVertexIdx(zoneId, vertexId);
+        if (vertexIdx >= 0) {
+            sbufWriteU8(dst, geoZoneVertices(vertexIdx)->zoneId);
+            sbufWriteU8(dst, geoZoneVertices(vertexIdx)->idx);
+            sbufWriteU32(dst, geoZoneVertices(vertexIdx)->lat);
+            sbufWriteU32(dst, geoZoneVertices(vertexIdx)->lon);
+            if (geoZonesConfig(zoneId)->shape == GEOZONE_SHAPE_CIRCULAR) {
+                int8_t vertexRadiusIdx = geozoneGetVertexIdx(zoneId, vertexId + 1);
+                if (vertexRadiusIdx >= 0) {
+                    sbufWriteU32(dst, geoZoneVertices(vertexRadiusIdx)->lat);
+                } else {
+                    return MSP_RESULT_ERROR;
+                }
+            }
+            return MSP_RESULT_ACK;
+        } else {
+            return MSP_RESULT_ERROR;
+        } 
+    } else {
+        return MSP_RESULT_ERROR;
+    }
+}
+#endif
+
 static mspResult_e mspFcLogicConditionCommand(sbuf_t *dst, sbuf_t *src) {
     const uint8_t idx = sbufReadU8(src);
     if (idx < MAX_LOGIC_CONDITIONS) {
@@ -1807,7 +1856,7 @@ static void mspFcWaypointOutCommand(sbuf_t *dst, sbuf_t *src)
 #ifdef USE_FLASHFS
 static void mspFcDataFlashReadCommand(sbuf_t *dst, sbuf_t *src)
 {
-    const unsigned int dataSize = sbufBytesRemaining(src);
+    const unsigned int dataSize = sbufBytesRemaining(src); /* Payload size in Bytes */
     uint16_t readLength;
 
     const uint32_t readAddress = sbufReadU32(src);
@@ -1831,7 +1880,7 @@ static mspResult_e mspFcProcessInCommand(uint16_t cmdMSP, sbuf_t *src)
     uint8_t tmp_u8;
     uint16_t tmp_u16;
 
-    const unsigned int dataSize = sbufBytesRemaining(src);
+    const unsigned int dataSize = sbufBytesRemaining(src);  /* Payload size in Bytes */
 
     switch (cmdMSP) {
     case MSP_SELECT_SETTING:
@@ -2716,7 +2765,7 @@ static mspResult_e mspFcProcessInCommand(uint16_t cmdMSP, sbuf_t *src)
                             vtxSettingsConfigMutable()->lowPowerDisarm = sbufReadU8(src);
                         }
 
-                        // API version 1.42 - extension for pitmode frequency 
+                        // API version 1.42 - extension for pitmode frequency
                         if (sbufBytesRemaining(src) >= 2) {
                             sbufReadU16(src); //skip pitModeFreq
                         }
@@ -2737,15 +2786,15 @@ static mspResult_e mspFcProcessInCommand(uint16_t cmdMSP, sbuf_t *src)
                         if (sbufBytesRemaining(src) >= 2) {
                             sbufReadU16(src); // freq
                         }
-                        
+
                         if (sbufBytesRemaining(src) >= 3) {
                             sbufReadU8(src); // band count
                             sbufReadU8(src); // channel count
-                            
+
                             uint8_t newPowerCount = sbufReadU8(src);
                             if (newPowerCount > 0 && newPowerCount < (vtxDevice->capability.powerCount)) {
                                 vtxDevice->capability.powerCount = newPowerCount;
-                            }                        
+                            }
                         }
                     }
                 }
@@ -2916,6 +2965,53 @@ static mspResult_e mspFcProcessInCommand(uint16_t cmdMSP, sbuf_t *src)
         } else
             return MSP_RESULT_ERROR;
         break;
+
+#ifdef USE_RX_MSP
+    case MSP2_COMMON_SET_MSP_RC_LINK_STATS: {
+            if (dataSize >= 7) {
+                uint8_t sublinkID = sbufReadU8(src); // Sublink ID
+                sbufReadU8(src); // Valid link (Failsafe backup)
+                if (sublinkID == 0) {
+                    setRSSIFromMSP_RC(sbufReadU8(src)); // RSSI %
+                    rxLinkStatistics.uplinkRSSI = -sbufReadU8(src);
+                    rxLinkStatistics.downlinkLQ = sbufReadU8(src);
+                    rxLinkStatistics.uplinkLQ = sbufReadU8(src);
+                    rxLinkStatistics.uplinkSNR = sbufReadI8(src);
+                }
+
+                return MSP_RESULT_NO_REPLY;
+            } else
+                return MSP_RESULT_ERROR;
+        }
+        break;
+
+    case MSP2_COMMON_SET_MSP_RC_INFO: {
+            if (dataSize >= 15) {
+                uint8_t sublinkID = sbufReadU8(src);
+
+                if (sublinkID == 0) {
+                    rxLinkStatistics.uplinkTXPower = sbufReadU16(src);
+                    rxLinkStatistics.downlinkTXPower = sbufReadU16(src);
+
+                    for (int i = 0; i < 4; i++) {
+                        rxLinkStatistics.band[i] = sbufReadU8(src);
+                    }
+
+                    sl_toupperptr(rxLinkStatistics.band);
+
+                    for (int i = 0; i < 6; i++) {
+                        rxLinkStatistics.mode[i] = sbufReadU8(src);
+                    }
+
+                    sl_toupperptr(rxLinkStatistics.mode);
+                }
+
+                return MSP_RESULT_NO_REPLY;
+            } else
+                return MSP_RESULT_ERROR;
+        }
+        break;
+#endif
 
     case MSP_SET_FAILSAFE_CONFIG:
         if (dataSize == 20) {
@@ -3320,6 +3416,50 @@ static mspResult_e mspFcProcessInCommand(uint16_t cmdMSP, sbuf_t *src)
 
         gpsUbloxSendCommand(src->ptr, dataSize, 0);
         break;
+
+#ifdef USE_GEOZONE
+    case MSP2_INAV_SET_GEOZONE:
+        if (dataSize == 14) {
+            uint8_t geozoneId;
+            if (!sbufReadU8Safe(&geozoneId, src) || geozoneId >= MAX_GEOZONES_IN_CONFIG) {
+                return MSP_RESULT_ERROR;
+            }
+            
+            geozoneResetVertices(geozoneId, -1);
+            geoZonesConfigMutable(geozoneId)->type = sbufReadU8(src); 
+            geoZonesConfigMutable(geozoneId)->shape = sbufReadU8(src);
+            geoZonesConfigMutable(geozoneId)->minAltitude = sbufReadU32(src);
+            geoZonesConfigMutable(geozoneId)->maxAltitude = sbufReadU32(src);  
+            geoZonesConfigMutable(geozoneId)->isSealevelRef = sbufReadU8(src);   
+            geoZonesConfigMutable(geozoneId)->fenceAction = sbufReadU8(src);
+            geoZonesConfigMutable(geozoneId)->vertexCount = sbufReadU8(src);
+        } else {
+            return MSP_RESULT_ERROR;
+        }
+        break;
+    case MSP2_INAV_SET_GEOZONE_VERTEX:
+        if (dataSize == 10 || dataSize == 14) {
+            uint8_t geozoneId = 0;
+            if (!sbufReadU8Safe(&geozoneId, src) || geozoneId >= MAX_GEOZONES_IN_CONFIG) {
+                return MSP_RESULT_ERROR;
+            }
+            uint8_t vertexId = sbufReadU8(src);
+            int32_t lat = sbufReadU32(src);
+            int32_t lon = sbufReadU32(src);
+            if (!geozoneSetVertex(geozoneId, vertexId, lat, lon)) {
+                return MSP_RESULT_ERROR;
+            }
+
+            if (geoZonesConfig(geozoneId)->shape == GEOZONE_SHAPE_CIRCULAR) {
+                if (!geozoneSetVertex(geozoneId, vertexId + 1, sbufReadU32(src), 0)) {
+                    return MSP_RESULT_ERROR;
+                }
+            }
+        } else {
+            return MSP_RESULT_ERROR;
+        }
+        break;
+#endif
 
 #ifdef USE_EZ_TUNE
 
@@ -3899,6 +4039,14 @@ bool mspFCProcessInOutCommand(uint16_t cmdMSP, sbuf_t *dst, sbuf_t *src, mspResu
         *ret = mspFwApproachOutCommand(dst, src);
         break;
 #endif
+#ifdef USE_GEOZONE
+    case MSP2_INAV_GEOZONE:
+        *ret = mspFcGeozoneOutCommand(dst, src);
+        break;
+    case MSP2_INAV_GEOZONE_VERTEX:
+        *ret = mspFcGeozoneVerteciesOutCommand(dst, src);
+        break;
+#endif
 #ifdef USE_SIMULATOR
     case MSP_SIMULATOR:
         tmp_u8 = sbufReadU8(src); // Get the Simulator MSP version
@@ -4201,7 +4349,7 @@ mspResult_e mspFcProcessCommand(mspPacket_t *cmd, mspPacket_t *reply, mspPostPro
     if (cmd->flags & MSP_FLAG_DONT_REPLY) {
         ret = MSP_RESULT_NO_REPLY;
     }
-
+    reply->flags = cmd->flags;
     reply->result = ret;
     return ret;
 }
