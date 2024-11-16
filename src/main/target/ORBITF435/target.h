@@ -24,12 +24,12 @@
 
 #pragma once
 
-#ifdef ORBITF405
+#ifdef ORBITF435
 #define TARGET_BOARD_IDENTIFIER "ORB4"
-#define USBD_PRODUCT_STRING     "ORBITF405"
+#define USBD_PRODUCT_STRING     "ORBITF435"
 #else
 #define TARGET_BOARD_IDENTIFIER "ORB4SD"
-#define USBD_PRODUCT_STRING     "ORBITF405_SD"
+#define USBD_PRODUCT_STRING     "ORBITF435_SD"
 #endif
 
 /*** Indicators ***/
@@ -40,12 +40,12 @@
 
 #define USE_PINIO
 #define USE_PINIOBOX
-#define PINIO1_PIN                  PB11
+#define PINIO1_PIN                  PC8
 #define PINIO1_FLAGS                PINIO_FLAGS_INVERTED
 
 // *************** UART *****************************
 #define USE_VCP
-//#define USB_DETECT_PIN          PC14
+#define USB_DETECT_PIN          PC9
 #define USE_UART_INVERTER
 
 #define USE_UART1
@@ -65,8 +65,8 @@
 #define UART3_TX_PIN            PC10
 #define UART3_RX_PIN            PC11
 
-#define UART4_TX_PIN            PA0
-#define UART4_RX_PIN            PA1 
+#define UART4_TX_PIN            PH3
+#define UART4_RX_PIN            PH2 
 
 #define UART5_TX_PIN            PC12    // Not broken out
 #define UART5_RX_PIN            PD2     //ESC TLM
@@ -74,9 +74,9 @@
 #define UART6_TX_PIN            PC6
 #define UART6_RX_PIN            PC7
 
-#define USE_SOFTSERIAL1
-#define SOFTSERIAL_1_TX_PIN      PA2
-#define SOFTSERIAL_1_RX_PIN      PA2
+//#define USE_SOFTSERIAL1
+//#define SOFTSERIAL_1_TX_PIN      PA2
+//#define SOFTSERIAL_1_RX_PIN      PA2
 
 #define SERIAL_PORT_COUNT       8
 
@@ -128,7 +128,7 @@
 #define SPI3_MISO_PIN           PB4
 #define SPI3_MOSI_PIN           PB5
 
-#if defined(ORBITF405_SD)
+#if defined(ORBITF435_SD)
 //SDCARD Definations
 #define USE_SDCARD
 #define USE_SDCARD_SPI
@@ -142,7 +142,7 @@
 #define USE_FLASHFS
 #define USE_FLASH_M25P16
 #define M25P16_SPI_BUS                  BUS_SPI3
-#define M25P16_CS_PIN                   PB15
+#define M25P16_CS_PIN                   PB12
 #define ENABLE_BLACKBOX_LOGGING_ON_SPIFLASH_BY_DEFAULT
 #endif
 
@@ -174,7 +174,7 @@
 
 // *************** LED *****************************
 #define USE_LED_STRIP
-#define WS2811_PIN PA8
+#define WS2811_PIN PA0
 
 #define DEFAULT_FEATURES                (FEATURE_TX_PROF_SEL  | FEATURE_OSD | FEATURE_CURRENT_METER | FEATURE_VBAT  | FEATURE_BLACKBOX | FEATURE_TELEMETRY)
 
@@ -189,4 +189,6 @@
 #define TARGET_IO_PORTA 0xffff
 #define TARGET_IO_PORTB 0xffff
 #define TARGET_IO_PORTC 0xffff
-#define TARGET_IO_PORTD (BIT(2))
+#define TARGET_IO_PORTD 0xffff
+#define TARGET_IO_PORTE BIT(2)
+#define TARGET_IO_PORTH (BIT(1)|BIT(2)|BIT(3))

@@ -59,7 +59,7 @@
 void targetConfiguration(void)
 {
 
-    serialConfigMutable()->portConfigs[findSerialPortIndexByIdentifier(SERIAL_PORT_USART5)].functionMask = FUNCTION_ESCSERIAL;
+    serialConfigMutable()->portConfigs[findSerialPortIndexByIdentifier(SERIAL_PORT_USART3)].functionMask = FUNCTION_ESCSERIAL;
     
     pinioBoxConfigMutable()->permanentId[0] = BOXARM;
 }

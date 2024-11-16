@@ -35,17 +35,17 @@
 BUSDEV_REGISTER_SPI_TAG(busdev_icm42688, DEVHW_ICM42605, ICM42688_SPI_BUS,  ICM42688_CS_PIN,  NONE,  0,  DEVFLAGS_NONE,  IMU_ICM42688_ALIGN);
 
 timerHardware_t timerHardware[] = {
-    DEF_TIM(TIM3, CH3, PB0,  TIM_USE_MOTOR, 1, 0), // M1
-    DEF_TIM(TIM3, CH4, PB1,  TIM_USE_MOTOR, 1, 0), // M2
-    DEF_TIM(TIM2, CH3, PB10, TIM_USE_MOTOR, 1, 0), // M3
-    DEF_TIM(TIM8, CH3, PC8,  TIM_USE_MOTOR, 1, 0), // M4
-    DEF_TIM(TIM8, CH4, PC9,  TIM_USE_MOTOR, 1, 0), // M5
-    DEF_TIM(TIM2, CH1, PA15, TIM_USE_MOTOR, 1, 0), // M6
-    DEF_TIM(TIM4, CH1, PB6,  TIM_USE_MOTOR, 1, 0), // M7
-    DEF_TIM(TIM4, CH2, PB7,  TIM_USE_MOTOR, 1, 0), // M8
+    DEF_TIM(TMR3, CH3, PB0,  TIM_USE_MOTOR, 0, 1), // M1
+    DEF_TIM(TMR3, CH4, PB1,  TIM_USE_MOTOR, 0, 2), // M2
+    //DEF_TIM(TIM2, CH3, PB10, TIM_USE_MOTOR, 0, 3), // M3
+    //DEF_TIM(TIM2, CH4, PB11,  TIM_USE_MOTOR, 0, 4), // M4
+    //DEF_TIM(TIM2, CH1, PA15, TIM_USE_MOTOR, 0, 0), // M5
+    //DEF_TIM(TIM4, CH1, PB6,  TIM_USE_MOTOR, 0, 0), // M6
+    //DEF_TIM(TIM4, CH2, PB7,  TIM_USE_MOTOR, 0, 0), // M7
+    //DEF_TIM(TIM2, CH2, PA1,  TIM_USE_MOTOR, 0, 0), // M8
     
-    DEF_TIM(TIM12, CH1, PB14,  TIM_USE_OUTPUT_AUTO, 1, 0), // M9 - Camera Control for Betaflight
-    DEF_TIM(TIM1, CH1, PA8,  TIM_USE_LED,   0, 0), //2812LED  D(1,5,3)
+    //DEF_TIM(TIM12, CH1, PB14,  TIM_USE_OUTPUT_AUTO, 0, 0), // M9 - Camera Control for Betaflight
+    //DEF_TIM(TIM5, CH1, PA0,  TIM_USE_LED,   0, 0), //2812LED  D(1,5,3)
 };
 
 const int timerHardwareCount = sizeof(timerHardware) / sizeof(timerHardware[0]);

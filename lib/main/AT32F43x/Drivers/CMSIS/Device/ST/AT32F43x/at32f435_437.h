@@ -381,6 +381,31 @@ typedef enum {RESET = 0, SET = !RESET} flag_status;
 typedef enum {FALSE = 0, TRUE = !FALSE} confirm_state;
 typedef enum {ERROR = 0, SUCCESS = !ERROR} error_status;
 
+/** 
+  * @brief Serial Peripheral Interface
+  */
+
+typedef struct
+{
+  __IO uint16_t CR1;        /*!< SPI control register 1 (not used in I2S mode),      Address offset: 0x00 */
+  uint16_t      RESERVED0;  /*!< Reserved, 0x02                                                           */
+  __IO uint16_t CR2;        /*!< SPI control register 2,                             Address offset: 0x04 */
+  uint16_t      RESERVED1;  /*!< Reserved, 0x06                                                           */
+  __IO uint16_t SR;         /*!< SPI status register,                                Address offset: 0x08 */
+  uint16_t      RESERVED2;  /*!< Reserved, 0x0A                                                           */
+  __IO uint16_t DR;         /*!< SPI data register,                                  Address offset: 0x0C */
+  uint16_t      RESERVED3;  /*!< Reserved, 0x0E                                                           */
+  __IO uint16_t CRCPR;      /*!< SPI CRC polynomial register (not used in I2S mode), Address offset: 0x10 */
+  uint16_t      RESERVED4;  /*!< Reserved, 0x12                                                           */
+  __IO uint16_t RXCRCR;     /*!< SPI RX CRC register (not used in I2S mode),         Address offset: 0x14 */
+  uint16_t      RESERVED5;  /*!< Reserved, 0x16                                                           */
+  __IO uint16_t TXCRCR;     /*!< SPI TX CRC register (not used in I2S mode),         Address offset: 0x18 */
+  uint16_t      RESERVED6;  /*!< Reserved, 0x1A                                                           */
+  __IO uint16_t I2SCFGR;    /*!< SPI_I2S configuration register,                     Address offset: 0x1C */
+  uint16_t      RESERVED7;  /*!< Reserved, 0x1E                                                           */
+  __IO uint16_t I2SPR;      /*!< SPI_I2S prescaler register,                         Address offset: 0x20 */
+  uint16_t      RESERVED8;  /*!< Reserved, 0x22                                                           */
+} SPI_TypeDef;
 
 
 /**
