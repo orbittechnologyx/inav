@@ -60,6 +60,8 @@ void targetConfiguration(void)
 {
 
     serialConfigMutable()->portConfigs[findSerialPortIndexByIdentifier(SERIAL_PORT_USART3)].functionMask = FUNCTION_ESCSERIAL;
-    
-    pinioBoxConfigMutable()->permanentId[0] = BOXARM;
+    serialConfigMutable()->portConfigs[findSerialPortIndexByIdentifier(SERIAL_PORT_USART6)].functionMask = FUNCTION_GPS;
+    serialConfigMutable()->portConfigs[findSerialPortIndexByIdentifier(SERIAL_PORT_USART2)].functionMask = FUNCTION_RX_SERIAL;
+
+    pinioBoxConfigMutable()->permanentId[0] = BOX_PERMANENT_ID_USER1; //VTX power switch
 }

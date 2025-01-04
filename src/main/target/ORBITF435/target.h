@@ -38,6 +38,7 @@
 #define BEEPER                  PC15
 #define BEEPER_INVERTED
 
+//need to test
 #define USE_PINIO
 #define USE_PINIOBOX
 #define PINIO1_PIN                  PC8
@@ -62,23 +63,19 @@
 #define UART2_RX_PIN            PA3
 #define INVERTER_PIN_UART2_RX   PB2
 
-#define UART3_TX_PIN            PC10
-#define UART3_RX_PIN            PC11
+#define UART3_TX_PIN            PC10 // No connection
+#define UART3_RX_PIN            PC11 // ESC TLM
 
 #define UART4_TX_PIN            PH3
 #define UART4_RX_PIN            PH2 
 
-#define UART5_TX_PIN            PC12    // Not broken out
-#define UART5_RX_PIN            PD2     //ESC TLM
+#define UART5_TX_PIN            PC12
+#define UART5_RX_PIN            PD2  
 
 #define UART6_TX_PIN            PC6
 #define UART6_RX_PIN            PC7
 
-//#define USE_SOFTSERIAL1
-//#define SOFTSERIAL_1_TX_PIN      PA2
-//#define SOFTSERIAL_1_RX_PIN      PA2
-
-#define SERIAL_PORT_COUNT       8
+#define SERIAL_PORT_COUNT       7 //VCP, UART1, UART2, UART3, UART4, UART5, UART6
 
 #define DEFAULT_RX_TYPE         RX_TYPE_SERIAL
 #define SERIALRX_PROVIDER       SERIALRX_SBUS
@@ -134,15 +131,15 @@
 #define USE_SDCARD_SPI
 #define SDCARD_SPI_BUS          BUS_SPI3
 #define SDCARD_CS_PIN           PC14
-//#define SDCARD_DETECT_INVERTED
-//#define SDCARD_DETECT_PIN       PC14
+#define SDCARD_DETECT_INVERTED
+#define SDCARD_DETECT_PIN       PA8
 #define ENABLE_BLACKBOX_LOGGING_ON_SDCARD_BY_DEFAULT
 #else
 //FLASHFS Definations
 #define USE_FLASHFS
 #define USE_FLASH_M25P16
 #define M25P16_SPI_BUS                  BUS_SPI3
-#define M25P16_CS_PIN                   PB12
+#define M25P16_CS_PIN                   PB15
 #define ENABLE_BLACKBOX_LOGGING_ON_SPIFLASH_BY_DEFAULT
 #endif
 
@@ -170,21 +167,23 @@
 #define RSSI_ADC_CHANNEL            ADC_CHN_3
 
 #define VBAT_SCALE_DEFAULT      1010
-#define CURRENT_METER_SCALE     400
+#define CURRENT_METER_SCALE     125
 
 // *************** LED *****************************
 #define USE_LED_STRIP
 #define WS2811_PIN PA0
 
-#define DEFAULT_FEATURES                (FEATURE_TX_PROF_SEL  | FEATURE_OSD | FEATURE_CURRENT_METER | FEATURE_VBAT  | FEATURE_BLACKBOX | FEATURE_TELEMETRY)
+#define DEFAULT_FEATURES                (FEATURE_TX_PROF_SEL  | FEATURE_OSD | FEATURE_CURRENT_METER | FEATURE_VBAT  | FEATURE_BLACKBOX | FEATURE_TELEMETRY | FEATURE_OSD | FEATURE_LED_STRIP)
 
 
 #define USE_DSHOT
 #define USE_SERIALSHOT
+#define USE_ESCSERIAL
 #define USE_ESC_SENSOR
+#define USE_RPM_FILTER
 #define USE_SERIAL_4WAY_BLHELI_INTERFACE
 
-#define MAX_PWM_OUTPUT_PORTS        10
+#define MAX_PWM_OUTPUT_PORTS        11
 
 #define TARGET_IO_PORTA 0xffff
 #define TARGET_IO_PORTB 0xffff
