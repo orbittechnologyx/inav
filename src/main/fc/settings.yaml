@@ -1231,7 +1231,7 @@ groups:
         max: INT16_MAX
       - name: motorstop_on_low
         description: "If enabled, motor will stop when throttle is low on this mixer_profile"
-        default_value: OFF
+        default_value: ON
         field: mixer_config.motorstopOnLow
         type: bool
       - name: mixer_pid_profile_linking
@@ -2342,7 +2342,7 @@ groups:
         type: uint8_t
       - name: fw_autotune_max_rate_deflection
         description: "The target percentage of maximum mixer output used for determining the rates in `AUTO` and `LIMIT`."
-        default_value: 80
+        default_value: 90
         field: fw_max_rate_deflection
         min: 50
         max: 100
