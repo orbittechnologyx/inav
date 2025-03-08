@@ -174,6 +174,8 @@
 #define USE_PINIOBOX
 #define PINIO1_PIN                  PE2  // VTX power switcher
 #define PINIO2_PIN                  PD2  // 2xCamera switcher
+#define PINIO1_FLAGS				PINIO_FLAGS_INVERTED
+#define PINIO2_FLAGS				PINIO_FLAGS_INVERTED
 
 // *************** LEDSTRIP ************************
 #define USE_LED_STRIP
