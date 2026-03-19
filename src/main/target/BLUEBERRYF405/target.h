@@ -18,23 +18,22 @@
 #pragma once
 #define USE_TARGET_CONFIG
 
-#   define TARGET_BOARD_IDENTIFIER "BlueBerry"
-#   define USBD_PRODUCT_STRING  "BLUEBERRYF405"
+#define TARGET_BOARD_IDENTIFIER "BLF4"
+#define USBD_PRODUCT_STRING     "BLUEBERRYF405"
 
 #define LED0                    PA14  //Blue
 #define LED1                    PA13  //Green
 
 #define BEEPER                  PB9
 #define BEEPER_INVERTED
-#define BEEPER_PWM_FREQUENCY    2500
 
 // *************** SPI1 IMU & OSD *******************
 #define USE_SPI
 #define USE_SPI_DEVICE_1
 
 #define SPI1_SCK_PIN            PA5
-#define SPI1_MISO_PIN   	    PB4
-#define SPI1_MOSI_PIN   	    PA7
+#define SPI1_MISO_PIN           PB4
+#define SPI1_MOSI_PIN           PA7
 
 #define USE_IMU_ICM42605
 #define IMU_ICM42605_ALIGN      CW270_DEG_FLIP
@@ -46,8 +45,6 @@
 #define BMI270_SPI_BUS          BUS_SPI1
 #define BMI270_CS_PIN           PC14
 
-
-
 #define USE_MAX7456
 #define MAX7456_SPI_BUS         BUS_SPI1
 #define MAX7456_CS_PIN          PB12
@@ -55,14 +52,14 @@
 // *************** SPI2 Flash/SD Card  ****************
 #define USE_SPI_DEVICE_2
 #define SPI2_SCK_PIN            PB13
-#define SPI2_MISO_PIN   	    PC2
-#define SPI2_MOSI_PIN   	    PC3
+#define SPI2_MISO_PIN           PC2
+#define SPI2_MOSI_PIN           PC3
 
-#   define USE_SDCARD
-#   define USE_SDCARD_SPI
-#   define SDCARD_SPI_BUS          BUS_SPI2
-#   define SDCARD_CS_PIN           PC1
-#   define ENABLE_BLACKBOX_LOGGING_ON_SDCARD_BY_DEFAULT
+#define USE_SDCARD
+#define USE_SDCARD_SPI
+#define SDCARD_SPI_BUS              BUS_SPI2
+#define SDCARD_CS_PIN               PC1
+#define ENABLE_BLACKBOX_LOGGING_ON_SDCARD_BY_DEFAULT
 
 // *************** I2C /Baro/Mag *********************
 #define USE_I2C
@@ -141,13 +138,15 @@
 #define USE_PINIOBOX
 #define PINIO1_PIN                  PA4
 #define PINIO2_PIN                  PB5
+// TODO: Check if PINIO1 hardware is active-low; if so, add:
+// #define PINIO1_FLAGS PINIO_FLAGS_INVERTED
 
 // *************** LEDSTRIP ************************
 #define USE_LED_STRIP
 #define WS2811_PIN                  PB1
 
 // *************** others  ************************
-#define DEFAULT_FEATURES   (FEATURE_OSD | FEATURE_TELEMETRY | FEATURE_CURRENT_METER | FEATURE_VBAT | FEATURE_TX_PROF_SEL | FEATURE_BLACKBOX)
+#define DEFAULT_FEATURES   (FEATURE_OSD | FEATURE_TELEMETRY | FEATURE_CURRENT_METER | FEATURE_VBAT | FEATURE_TX_PROF_SEL | FEATURE_BLACKBOX | FEATURE_SOFTSERIAL)
 #define VBAT_SCALE_DEFAULT      2100
 #define CURRENT_METER_SCALE     150
 

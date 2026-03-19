@@ -40,10 +40,8 @@ timerHardware_t timerHardware[] = {
     DEF_TIM(TIM4,  CH1,  PB6,  TIM_USE_OUTPUT_AUTO,   0, 0), // S11 D(1,0,2)
 
     DEF_TIM(TIM3,  CH4,  PB1,  TIM_USE_LED,    0, 0), // 2812LED  D(1,2,5)
-    DEF_TIM(TIM11, CH1,  PB9,  TIM_USE_BEEPER, 0, 0), // BEEPER PWM
-    
-    // DEF_TIM(TIM9,  CH2,  PA3,  TIM_USE_PPM,    0, 0), //RX2
-    DEF_TIM(TIM5,  CH3,  PA2,  TIM_USE_ANY,    0, 0), //TX2  softserial1_Tx
+
+    DEF_TIM(TIM5,  CH3,  PA2,  TIM_USE_ANY,    0, 0), // softserial1_TX (PA2 shared with UART2_TX)
 };
 
 const int timerHardwareCount = sizeof(timerHardware) / sizeof(timerHardware[0]);

@@ -19,11 +19,15 @@
 #include "platform.h"
 #include "fc/fc_msp_box.h"
 #include "fc/config.h"
+#include "drivers/pwm_mapping.h"
 #include "io/piniobox.h"
 
 void targetConfiguration(void)
 {
     pinioBoxConfigMutable()->permanentId[0] = BOX_PERMANENT_ID_USER1;
     pinioBoxConfigMutable()->permanentId[1] = BOX_PERMANENT_ID_USER2;
-    beeperConfigMutable()->pwmMode = true;
+
+	// S1 and S2 are not as readily accessible
+    timerOverridesMutable(timer2id(TIM1))->outputMode = OUTPUT_MODE_MOTORS;
+    timerOverridesMutable(timer2id(TIM2))->outputMode = OUTPUT_MODE_SERVOS;
 }
