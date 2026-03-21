@@ -110,11 +110,7 @@
 #define UART6_TX_PIN            PC6
 #define UART6_RX_PIN            PC7
 
-#define USE_SOFTSERIAL1
-#define SOFTSERIAL_1_TX_PIN      PA2
-#define SOFTSERIAL_1_RX_PIN      PA2
-
-#define SERIAL_PORT_COUNT       8
+#define SERIAL_PORT_COUNT       7
 
 #define DEFAULT_RX_TYPE         RX_TYPE_SERIAL
 #define SERIALRX_PROVIDER       SERIALRX_CRSF
@@ -138,15 +134,13 @@
 #define USE_PINIOBOX
 #define PINIO1_PIN                  PA4
 #define PINIO2_PIN                  PB5
-// TODO: Check if PINIO1 hardware is active-low; if so, add:
-// #define PINIO1_FLAGS PINIO_FLAGS_INVERTED
 
 // *************** LEDSTRIP ************************
 #define USE_LED_STRIP
 #define WS2811_PIN                  PB1
 
 // *************** others  ************************
-#define DEFAULT_FEATURES   (FEATURE_OSD | FEATURE_TELEMETRY | FEATURE_CURRENT_METER | FEATURE_VBAT | FEATURE_TX_PROF_SEL | FEATURE_BLACKBOX | FEATURE_SOFTSERIAL)
+#define DEFAULT_FEATURES   (FEATURE_OSD | FEATURE_TELEMETRY | FEATURE_CURRENT_METER | FEATURE_VBAT | FEATURE_TX_PROF_SEL | FEATURE_BLACKBOX )
 #define VBAT_SCALE_DEFAULT      2100
 #define CURRENT_METER_SCALE     150
 
